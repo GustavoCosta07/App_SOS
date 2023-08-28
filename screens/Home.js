@@ -72,6 +72,7 @@ export default function Home() {
             chamado_observacoes={order.chamado_observacoes}
             os_status_nome={order.os_status_nome}
             chamado_status={order.chamado_status}
+            chamado_cliente_codigo={order.chamado_cliente_codigo}
           />
         ))}
       </ScrollView>

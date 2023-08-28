@@ -7,6 +7,8 @@ import LoginScreen from './screens/Login';
 import AppDrawer from './AppDrawer'; // Seu DrawerNavigator atual
 import OrderDetails from "./screens/OrderDetails"
 import { UserProvider } from './UserContext';
+import TratarChamado from "./screens/TratarChamado";
+import orcamento from "./screens/orcamento";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +20,8 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AppDrawers" component={AppDrawer} options={{ headerShown: false }} />
           <Stack.Screen name="OrderDetails" component={OrderDetails} options={{ headerShown: true, title: 'Detalhamento', headerTitleStyle: {color: "#4E54C8"}, }} />
+          <Stack.Screen name="TratarChamado" component={TratarChamado} options={{ headerShown: true, title: 'Detalhamento', headerTitleStyle: {color: "#4E54C8"} }} />
+          <Stack.Screen name="orcamento" component={orcamento} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
