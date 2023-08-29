@@ -1,70 +1,114 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
-
+import React, { useState, useEffect } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
+import CheckBox from '../components/CheckBox';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function TratarChamado({ route }) {
     const { dados } = route.params;
-    console.log('coffe', dados)
+
+    const [databaseItems, setDatabaseItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [texto, setTexto] = useState('');
+
+    useEffect(() => {
+        const fetchDataFromDatabase = async () => {
+            try {
+                const requestBody = {
+                    id: 8
+                };
+
+                const response = await fetch(
+                    'https://grupofmv.app.br/api/v1/integracao/buscar_pecas',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    }
+                );
+                const data = await response.json();
+                setDatabaseItems(data.data);
+            } catch (error) {
+                console.error('Erro ao buscar dados do banco de dados:', error);
+            }
+        };
+
+        fetchDataFromDatabase();
+    }, []);
 
     const finalizar = () => {
-        alert('ola')
-    }
+        alert('Texto inserido: ' + texto);
+    };
 
     const orcamento = () => {
-        alert('ola')
-    }
-    if (dados) {
+        console.log(selectedItems);
+    };
 
-        return (
-            <View style={styles.container}>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.sectionTitle}>INFORME ITENS A SEREM ORÇADOS:</Text>
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
 
-                    <View style={{ height: 10 }} />
+    const optionsMultiple = databaseItems.map((item) => ({
+        text: item.produto_nome,
+        id: item.produto_id,
+    }));
 
-                    <TouchableOpacity
-                        style={styles.startButton}
-                        onPress={() => finalizar()}
-                    >
-                        <Text style={styles.startButtonText}>FINALIZAR</Text>
-                    </TouchableOpacity>
+    return (
+        <KeyboardAwareScrollView style={styles.container}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                
+            >
+                <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.sectionTitle}>
+                            INFORME ITENS A SEREM ORÇADOS:
+                        </Text>
 
-                    <View style={{ height: 10 }} />
+                        <View style={{ height: 10 }} />
 
-                    <TouchableOpacity
-                        style={styles.startButton}
-                        onPress={() => orcamento()}
-                    >
-                        <Text style={styles.startButtonText}>SOLICITAR ORÇAMENTO</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.container}>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.sectionTitle}>INFORME ITENS A SEREM ORÇADOS:</Text>
+                        <CheckBox
+                            options={optionsMultiple}
+                            onChange={(op) => setSelectedItems(op)}
+                            multiple
+                        />
 
-                    <View style={{ height: 10 }} />
+                        <View style={{ height: 15 }} />
 
-                    <TouchableOpacity
-                        style={styles.startButton}
-                        onPress={() => finalizar()}
-                    >
-                        <Text style={styles.startButtonText}>SALVAR</Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Digite as observações aqui..."
+                            onChangeText={(text) => setTexto(text)}
+                            value={texto}
+                            multiline={true}
+                            numberOfLines={4}
+                        />
 
-                    <View style={{ height: 10 }} />
+                        <View style={{ height: 10 }} />
 
-                  
-                </View>
-            </View>
-        );
-    }
+                        <TouchableOpacity
+                            style={styles.startButton}
+                            onPress={() => orcamento()}
+                        >
+                            <Text style={styles.startButtonText}>Salvar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+    );
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -82,24 +126,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 10,
-        color: "#4E54C8"
+        color: '#4E54C8',
     },
-    infoPair: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 5,
-    },
-    infoLabel: {
-        fontWeight: 'bold',
-        marginRight: 5,
-        color: "grey"
-    },
-    infoSpacer: {
-        marginRight: 5,
-    },
-    infoValue: {
-        flex: 1,
-        color: "grey"
+    textInput: {
+        height: 120,
+        borderWidth: 1,
+        borderColor: 'gray',
+        paddingLeft: 10,
+        borderRadius: 10,
     },
     startButton: {
         backgroundColor: '#4E54C8',

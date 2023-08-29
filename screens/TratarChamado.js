@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function TratarChamado({route}) {
+export default function TratarChamado({ route }) {
   const { dados } = route.params;
-  console.log('coffe',dados)
+  console.log('coffe', dados)
   const navigation = useNavigation();
 
   const finalizar = () => {
@@ -15,20 +15,21 @@ export default function TratarChamado({route}) {
   }
 
   const orcamento = () => {
-    navigation.navigate('orcamento',{dados})
+    navigation.navigate('orcamento', { dados })
   }
 
-  
+
 
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
         <Text style={styles.sectionTitle}>DADOS DO EQUIPAMENTO:</Text>
-        <InfoPair label="Nome:" value={dados.equipamento.equipamento_nome || ''} />
-        <InfoPair label="Marca:" value={dados.equipamento.marca_nome || ''} />
-        <InfoPair label="Modelo:" value={dados.equipamento.modelo_nome || ''} />
-        <InfoPair label="Porta:" value={dados.equipamento.equipamentos_porta || ''} />
-        <InfoPair label="Paradas:" value={dados.equipamento.equipamentos_paradas || ''} />
+        <InfoPair label="Nome:" value={dados.equipamento ? dados.equipamento.equipamento_nome : ''} />
+        <InfoPair label="Marca:" value={dados.equipamento ? dados.equipamento.marca_nome : ''} />
+        <InfoPair label="Modelo:" value={dados.equipamento ? dados.equipamento.modelo_nome : ''} />
+        <InfoPair label="Porta:" value={dados.equipamento ? dados.equipamento.equipamentos_porta : ''} />
+        <InfoPair label="Paradas:" value={dados.equipamento ? dados.equipamento.equipamentos_paradas : ''} />
+
 
         <View style={{ height: 10 }} />
 
@@ -40,7 +41,7 @@ export default function TratarChamado({route}) {
         </TouchableOpacity>
 
         <View style={{ height: 10 }} />
-        
+
         <TouchableOpacity
           style={styles.startButton}
           onPress={() => orcamento()}

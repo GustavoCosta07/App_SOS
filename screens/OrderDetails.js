@@ -23,22 +23,23 @@ const OrderDetails = ({ route }) => {
 
   const navigation = useNavigation();
 
-  const [selectedOption, setSelectedOption] = useState('equipamento1'); // Valor inicial
+  const [selectedOption, setSelectedOption] = useState('equipamento1'); 
   const [databaseItems, setDatabaseItems] = useState([]);
 
   const retornaView = (selectedOption) => {
-    const objetoDesejado = databaseItems.find(item => item.equipamento_id === selectedOption);
-    console.log('rio',objetoDesejado)
-    const dados = { equipamento: objetoDesejado }; // Seus dados aqui
+    let objetoDesejado = null 
+
+    if (selectedOption != 'fixa') {
+      console.log('gustavo')
+      objetoDesejado = databaseItems.find(item => item.equipamento_id === selectedOption);
+    }
+
+    const dados = { equipamento: objetoDesejado }; 
     navigation.navigate('TratarChamado', { dados });
   }
-  
-
 
   useEffect(() => {
-    // Faça a requisição para buscar os itens do banco de dados
-    // e atualize o estado 'databaseItems' com os resultados.
-    // Exemplo fictício:
+    
     const fetchDataFromDatabase = async () => {
       try {
 
@@ -54,7 +55,7 @@ const OrderDetails = ({ route }) => {
           body: JSON.stringify(requestBody),
         });
         const data = await response.json();
-        setDatabaseItems(data.data); // Supondo que os itens estejam em um array no objeto de resposta.
+        setDatabaseItems(data.data); 
       } catch (error) {
         console.error('Erro ao buscar dados do banco de dados:', error);
       }
@@ -115,7 +116,7 @@ const OrderDetails = ({ route }) => {
             onValueChange={(itemValue) => handleOptionChange(itemValue)}
           >
             {/* Fixed option */}
-            <Picker.Item label="Não informar modelo" value="14" />
+            <Picker.Item label="Não informar modelo" value="fixa" />
 
             {databaseItems.map((item) => (
               <Picker.Item
@@ -131,9 +132,6 @@ const OrderDetails = ({ route }) => {
               />
             ))}
           </Picker>
-{/* começar daqui amanha, quando não tiver nada, esta dando erro de atribuição do nome, preciso fazer a condição de passar vazsio*/}
-
-
 
           <View style={{ height: 10 }} />
 
