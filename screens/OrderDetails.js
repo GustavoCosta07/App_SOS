@@ -97,6 +97,12 @@ const OrderDetails = ({ route }) => {
         <TouchableOpacity style={styles.startButton} onPress={() => alert('Iniciar Atendimento Pressionado')}>
           <Text style={styles.startButtonText}>Iniciar Atendimento</Text>
         </TouchableOpacity>
+
+        <View style={{ height: 10 }} />
+
+        <TouchableOpacity style={styles.startButton} onPress={() => alert('Iniciar Atendimento Pressionado')}>
+          <Text style={styles.startButtonText}>Iniciar Deslocamento</Text>
+        </TouchableOpacity>
       </View>
     );
   }
