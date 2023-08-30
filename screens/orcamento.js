@@ -64,50 +64,87 @@ export default function TratarChamado({ route }) {
         id: item.produto_id,
     }));
 
-    return (
-        <KeyboardAwareScrollView style={styles.container}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                
-            >
-                <TouchableWithoutFeedback onPress={dismissKeyboard}>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.sectionTitle}>
-                            INFORME ITENS A SEREM ORÇADOS:
-                        </Text>
+    if (dados.equipamento) {
 
-                        <View style={{ height: 10 }} />
+        return (
+            <KeyboardAwareScrollView style={styles.container}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 
-                        <CheckBox
-                            options={optionsMultiple}
-                            onChange={(op) => setSelectedItems(op)}
-                            multiple
-                        />
+                >
+                    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.sectionTitle}>
+                                INFORME ITENS A SEREM ORÇADOS:
+                            </Text>
 
-                        <View style={{ height: 15 }} />
+                            <View style={{ height: 10 }} />
 
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Digite as observações aqui..."
-                            onChangeText={(text) => setTexto(text)}
-                            value={texto}
-                            multiline={true}
-                            numberOfLines={4}
-                        />
+                            <CheckBox
+                                options={optionsMultiple}
+                                onChange={(op) => setSelectedItems(op)}
+                                multiple
+                            />
 
-                        <View style={{ height: 10 }} />
+                            <View style={{ height: 15 }} />
 
-                        <TouchableOpacity
-                            style={styles.startButton}
-                            onPress={() => orcamento()}
-                        >
-                            <Text style={styles.startButtonText}>Salvar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
-        </KeyboardAwareScrollView>
-    );
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Digite as observações aqui..."
+                                onChangeText={(text) => setTexto(text)}
+                                value={texto}
+                                multiline={true}
+                                numberOfLines={4}
+                            />
+
+                            <View style={{ height: 10 }} />
+
+                            <TouchableOpacity
+                                style={styles.startButton}
+                                onPress={() => orcamento()}
+                            >
+                                <Text style={styles.startButtonText}>Salvar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
+        );
+    } else {
+        return (
+            <View style={styles.container}>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.sectionTitle}>INFORME ITENS A SEREM ORÇADOS:</Text>
+
+                    <View style={{ height: 10 }} />
+
+
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Digite as observações aqui..."
+                        onChangeText={(text) => setTexto(text)}
+                        value={texto}
+                        multiline={true}
+                        numberOfLines={4}
+                    />
+
+                    <View style={{ height: 10 }} />
+
+                    <TouchableOpacity
+                        style={styles.startButton}
+                        onPress={() => finalizar()}
+                    >
+                        <Text style={styles.startButtonText}>SALVAR</Text>
+                    </TouchableOpacity>
+
+                    <View style={{ height: 10 }} />
+
+
+                </View>
+            </View>
+        );
+    }
+
 }
 
 const styles = StyleSheet.create({

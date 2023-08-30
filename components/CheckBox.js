@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from "@expo/vector-icons";
 
 const CheckBox = ({ options = [], onChange, multiple = false }) => {
-
-    
-
     const [selected, setSelected] = useState([]);
 
     function toggle(id) {
@@ -19,14 +16,15 @@ const CheckBox = ({ options = [], onChange, multiple = false }) => {
         }
         setSelected(arrSelecteds)
     }
+
     useEffect(() => onChange(selected), [selected]);
+
     return (
         <View style={styles.container}>
-
             {options.map((op, index) => (
-                <View style={styles.optionContainer}>
-                    <TouchableOpacity
-                        style={[
+                <View key={op.id} style={styles.optionContainer}>
+                    <TouchableWithoutFeedback onPress={() => toggle(op?.id)}>
+                        <View style={[
                             styles.touchable,
                             {
                                 backgroundColor:
@@ -34,29 +32,31 @@ const CheckBox = ({ options = [], onChange, multiple = false }) => {
                                         ? '#4E54C8'
                                         : '#fff'
                             }
-                        ]}
-                        onPress={() => toggle(op?.id)}
-                    >
-                        {selected.findIndex(i => i === op.id) !== -1 ? (
-                            <MaterialIcons name="check" color={'#fff'} size={15} />
-                        ) : null}
-                    </TouchableOpacity>
-                    <Text style={styles.optext}>{op?.text}</Text>
+                        ]}>
+                            {selected.findIndex(i => i === op.id) !== -1 ? (
+                                <MaterialIcons name="check" color={'#fff'} size={15} />
+                            ) : null}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => toggle(op?.id)}>
+                        <View style={styles.labelContainer}>
+                            <Text style={styles.optext}>{op?.text}</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </View>
             ))}
-
-        </View>)
+        </View>
+    )
 }
-
 
 const styles = StyleSheet.create({
     container: {
-        marginLeft: 12
+        marginLeft: -16,
     },
     optionContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 7
+        marginTop: 7,
     },
     touchable: {
         height: 20,
@@ -64,15 +64,16 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         justifyContent: 'center',
         borderColor: '#4E54C8',
-        borderWidth: 2
+        borderWidth: 2,
     },
-
-    optext: {
+    labelContainer: {
         marginLeft: 12,
+    },
+    optext: {
         color: '#555',
         fontSize: 12,
-        fontWeight: '600'
-    }
-})
+        fontWeight: '600',
+    },
+});
 
-export default CheckBox
+export default CheckBox;
