@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
+import { useContext } from 'react';
+import { UserContext } from '../UserContext';
 
 
 const OrderDetails = ({ route }) => {
@@ -18,28 +20,64 @@ const OrderDetails = ({ route }) => {
     os_consideracoes,
     chamado_observacoes,
     chamado_status,
-    chamado_cliente_codigo
+    chamado_cliente_codigo,
+    os_id
   } = route.params;
+
+  const { user } = useContext(UserContext);
+
 
   const navigation = useNavigation();
 
-  const [selectedOption, setSelectedOption] = useState('equipamento1'); 
+  const [selectedOption, setSelectedOption] = useState('equipamento1');
   const [databaseItems, setDatabaseItems] = useState([]);
 
   const retornaView = (selectedOption) => {
-    let objetoDesejado = null 
+    let objetoDesejado = null
 
     if (selectedOption != 'fixa') {
       console.log('gustavo')
       objetoDesejado = databaseItems.find(item => item.equipamento_id === selectedOption);
     }
 
-    const dados = { equipamento: objetoDesejado }; 
+    const dados = { equipamento: objetoDesejado };
     navigation.navigate('TratarChamado', { dados });
   }
 
+  const iniciarAtendimento = () => {
+
+    const fetchInit = async () => {
+      try {
+
+        const requestBody = {
+          id_chamado: orderNumber,
+          id_os: os_id,
+          status: chamado_status,
+          user_id: user.user_id
+
+        };
+
+        const response = await fetch('https://grupofmv.app.br/api/v1/integracao/iniciar_atendimento', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+        const data = await response.json();
+        if (data.status == 1) {
+          navigation.navigate('AppDrawers');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do banco de dados:', error);
+      }
+    };
+
+    fetchInit();
+  }
+
   useEffect(() => {
-    
+
     const fetchDataFromDatabase = async () => {
       try {
 
@@ -55,7 +93,7 @@ const OrderDetails = ({ route }) => {
           body: JSON.stringify(requestBody),
         });
         const data = await response.json();
-        setDatabaseItems(data.data); 
+        setDatabaseItems(data.data);
       } catch (error) {
         console.error('Erro ao buscar dados do banco de dados:', error);
       }
@@ -94,7 +132,7 @@ const OrderDetails = ({ route }) => {
         </View>
 
 
-        <TouchableOpacity style={styles.startButton} onPress={() => alert('Iniciar Atendimento Pressionado')}>
+        <TouchableOpacity style={styles.startButton} onPress={() => iniciarAtendimento()}>
           <Text style={styles.startButtonText}>Iniciar Atendimento</Text>
         </TouchableOpacity>
 

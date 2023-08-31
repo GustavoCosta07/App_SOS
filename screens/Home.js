@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import WelcomeMessage from '../screens/WelcomeMessage';
 import CallInfo from '../screens/CallInfo';
 import OrderCard from './OrderCard';
@@ -8,48 +8,64 @@ import { useContext } from 'react';
 import { UserContext } from '../UserContext';
 
 export default function Home() {
-
   const navigation = useNavigation();
-  
+
   const [orders, setOrders] = useState([]);
 
   const { user } = useContext(UserContext);
 
-  console.log('teste', user)
+  console.log('teste', user);
+
+  // Função para fazer a solicitação à API e obter os dados das ordens
+  const fetchOrders = async () => {
+    try {
+      const requestBody = {
+        id: '1',
+      };
+
+      const response = await fetch('https://grupofmv.app.br/api/v1/integracao/chamados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+      console.log('data', data);
+      setOrders(data.data); // Atualiza o estado com os dados das ordens
+    } catch (error) {
+      console.error('Erro ao obter dados das ordens:', error);
+    }
+  };
+
   useEffect(() => {
-    // Função para fazer a solicitação à API e obter os dados das ordens
-    const fetchOrders = async () => {
-      try {
-        
-        const requestBody = {
-          id: '1'
-        };
-  
-        const response = await fetch('https://grupofmv.app.br/api/v1/integracao/chamados', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        });
-  
-        const data = await response.json();
-        console.log('data',data)
-        setOrders(data.data); // Atualiza o estado com os dados das ordens
-      } catch (error) {
-        console.error('Erro ao obter dados das ordens:', error);
-      }
-    };
-  
     fetchOrders(); // Chama a função de solicitação à API ao carregar a tela
   }, []);
-  
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Função para atualizar os dados da página
+      const updateData = async () => {
+        // Coloque aqui o código para atualizar os dados da página
+        // Você pode usar a mesma função fetchOrders que você usou no useEffect
+        fetchOrders();
+      };
+
+      updateData(); // Chama a função de atualização ao entrar na tela
+
+      return () => {
+        // Coloque aqui o código para limpar os recursos ao sair da tela
+      };
+    }, [])
+  );
+
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <WelcomeMessage username={user.user_nome} />
       <CallInfo callCount={orders.length} countFontSize={30} />
       <ScrollView style={styles.scrollView}>
-        {orders.map(order => (
+        {orders.map((order) => (
           <OrderCard
             key={order.idChamado} // Certifique-se de ter um identificador único para cada ordem
             orderNumber={order.idChamado}
@@ -73,11 +89,12 @@ export default function Home() {
             os_status_nome={order.os_status_nome}
             chamado_status={order.chamado_status}
             chamado_cliente_codigo={order.chamado_cliente_codigo}
+            os_id={order.os_id}
           />
         ))}
       </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -116,6 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 function converterDataHora(dataHoraStr) {
   var partes = dataHoraStr.split(' ');
