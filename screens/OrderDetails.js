@@ -76,6 +76,34 @@ const OrderDetails = ({ route }) => {
     fetchInit();
   }
 
+  const iniciarDeslocamento = () => {
+
+    const fetchInit = async () => {
+      try {
+
+        const requestBody = {
+          id_tecnico: user.user_id
+        };
+
+        const response = await fetch('https://grupofmv.app.br/api/v1/integracao/iniciar_deslocamento_os', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+        const data = await response.json();
+        if (data.status == 1) {
+          navigation.navigate('AppDrawers');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do banco de dados:', error);
+      }
+    };
+
+    fetchInit();
+  }
+
   useEffect(() => {
 
     const fetchDataFromDatabase = async () => {
@@ -138,7 +166,7 @@ const OrderDetails = ({ route }) => {
 
         <View style={{ height: 10 }} />
 
-        <TouchableOpacity style={styles.startButton} onPress={() => alert('Iniciar Atendimento Pressionado')}>
+        <TouchableOpacity style={styles.startButton} onPress={() => iniciarDeslocamento()}>
           <Text style={styles.startButtonText}>Iniciar Deslocamento</Text>
         </TouchableOpacity>
       </View>
