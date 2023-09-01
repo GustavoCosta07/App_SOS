@@ -30,7 +30,6 @@ export default function RegisterEvent() {
     const confirmEvent = () => {
         // chamar a função fetch para fazer a requisição
         // com os dados do evento selecionado
-        console.log('Registrando o evento:', selectedEvent);
 
         // Feche o modal após a confirmação
         closeModal();

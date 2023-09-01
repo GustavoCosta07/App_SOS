@@ -34,7 +34,8 @@ const OrderCard = ({
     os_status_nome,
     chamado_status,
     chamado_cliente_codigo,
-    os_id
+    os_id,
+    chamado_deslocamento
 }) => {
     const navigation = useNavigation();
 
@@ -86,7 +87,8 @@ const OrderCard = ({
                     chamado_observacoes,
                     chamado_status,
                     chamado_cliente_codigo,
-                    os_id
+                    os_id,
+                    chamado_deslocamento
                 })}>
                 <Text style={styles.buttonText}>Acessar</Text>
             </TouchableOpacity>

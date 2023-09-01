@@ -21,11 +21,12 @@ const OrderDetails = ({ route }) => {
     chamado_observacoes,
     chamado_status,
     chamado_cliente_codigo,
-    os_id
+    os_id,
+    chamado_deslocamento
   } = route.params;
 
   const { user } = useContext(UserContext);
-
+  console.log('testeee', chamado_deslocamento)
 
   const navigation = useNavigation();
 
@@ -36,7 +37,6 @@ const OrderDetails = ({ route }) => {
     let objetoDesejado = null
 
     if (selectedOption != 'fixa') {
-      console.log('gustavo')
       objetoDesejado = databaseItems.find(item => item.equipamento_id === selectedOption);
     }
 
@@ -77,7 +77,7 @@ const OrderDetails = ({ route }) => {
   }
 
   const iniciarDeslocamento = () => {
-
+// 
     const fetchInit = async () => {
       try {
 
@@ -159,16 +159,28 @@ const OrderDetails = ({ route }) => {
           <Text style={{ color: 'grey' }}>{chamado_observacoes}</Text>
         </View>
 
-
-        <TouchableOpacity style={styles.startButton} onPress={() => iniciarAtendimento()}>
-          <Text style={styles.startButtonText}>Iniciar Atendimento</Text>
-        </TouchableOpacity>
+        {/* Condição para exibir o botão "Iniciar Atendimento" */}
+        {(chamado_deslocamento === 'N' || chamado_deslocamento === 'F') && (
+          <TouchableOpacity style={styles.startButton} onPress={() => iniciarAtendimento()}>
+            <Text style={styles.startButtonText}>Iniciar Atendimento</Text>
+          </TouchableOpacity>
+        )}
 
         <View style={{ height: 10 }} />
 
-        <TouchableOpacity style={styles.startButton} onPress={() => iniciarDeslocamento()}>
-          <Text style={styles.startButtonText}>Iniciar Deslocamento</Text>
-        </TouchableOpacity>
+        {/* Condição para exibir o botão "Iniciar Deslocamento" */}
+        {chamado_deslocamento === 'N' && (
+          <TouchableOpacity style={styles.startButton} onPress={() => iniciarDeslocamento()}>
+            <Text style={styles.startButtonText}>Iniciar Deslocamento</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Condição para exibir o botão "Encerrar Deslocamento" */}
+        {chamado_deslocamento === 'Y' && (
+          <TouchableOpacity style={styles.startButton} onPress={() => encerrarDeslocamento()}>
+            <Text style={styles.startButtonText}>Encerrar Deslocamento</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }

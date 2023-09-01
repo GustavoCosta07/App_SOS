@@ -14,8 +14,6 @@ export default function Home() {
 
   const { user } = useContext(UserContext);
 
-  console.log('teste', user);
-
   // Função para fazer a solicitação à API e obter os dados das ordens
   const fetchOrders = async () => {
     try {
@@ -32,7 +30,6 @@ export default function Home() {
       });
 
       const data = await response.json();
-      console.log('data', data);
       setOrders(data.data); // Atualiza o estado com os dados das ordens
     } catch (error) {
       console.error('Erro ao obter dados das ordens:', error);
@@ -90,6 +87,7 @@ export default function Home() {
             chamado_status={order.chamado_status}
             chamado_cliente_codigo={order.chamado_cliente_codigo}
             os_id={order.os_id}
+            chamado_deslocamento={order.chamado_deslocamento}
           />
         ))}
       </ScrollView>

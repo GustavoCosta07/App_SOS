@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function TratarChamado({ route }) {
   const { dados } = route.params;
-  console.log('coffe', dados)
   const navigation = useNavigation();
 
   const finalizar = () => {

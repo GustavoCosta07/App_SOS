@@ -52,7 +52,7 @@ export default function TratarChamado({ route }) {
     };
 
     const orcamento = () => {
-        console.log(selectedItems);
+        // console.log(selectedItems);
     };
 
     const dismissKeyboard = () => {
