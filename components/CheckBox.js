@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from "@expo/vector-icons";
 
-const CheckBox = ({ options = [], onChange, multiple = false }) => {
+const CheckBox = ({ options = [], onChange, multiple = false, left }) => {
     const [selected, setSelected] = useState([]);
 
     function toggle(id) {
@@ -20,7 +20,7 @@ const CheckBox = ({ options = [], onChange, multiple = false }) => {
     useEffect(() => onChange(selected), [selected]);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { marginLeft: left }]}>
             {options.map((op, index) => (
                 <View key={op.id} style={styles.optionContainer}>
                     <TouchableWithoutFeedback onPress={() => toggle(op?.id)}>
@@ -51,7 +51,7 @@ const CheckBox = ({ options = [], onChange, multiple = false }) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginLeft: -16,
+        // marginLeft: -16,
     },
     optionContainer: {
         flexDirection: 'row',

@@ -19,6 +19,7 @@ export default function TratarChamado({ route }) {
     const [databaseItems, setDatabaseItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [texto, setTexto] = useState('');
+    console.log(selectedItems)
 
     useEffect(() => {
         const fetchDataFromDatabase = async () => {
@@ -84,6 +85,7 @@ export default function TratarChamado({ route }) {
                                 options={optionsMultiple}
                                 onChange={(op) => setSelectedItems(op)}
                                 multiple
+                                left={-16}
                             />
 
                             <View style={{ height: 15 }} />

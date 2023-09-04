@@ -10,7 +10,7 @@ export default function TratarChamado({ route }) {
   const navigation = useNavigation();
 
   const finalizar = () => {
-    alert('ola')
+    navigation.navigate('osFinalizadaQuestion')
   }
 
   const orcamento = () => {

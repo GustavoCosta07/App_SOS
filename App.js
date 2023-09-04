@@ -9,6 +9,9 @@ import OrderDetails from "./screens/OrderDetails"
 import { UserProvider } from './UserContext';
 import TratarChamado from "./screens/TratarChamado";
 import orcamento from "./screens/orcamento";
+import osFinalizadaQuestion from "./screens/osFinalizadaQuestion"
+import osFinalizadaConfirm from "./screens/osFinalizadaConfirm"
+import adicionarFotos from "./screens/adicionarFotos"
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +25,9 @@ export default function App() {
           <Stack.Screen name="OrderDetails" component={OrderDetails} options={{ headerShown: true, title: 'Detalhamento', headerTitleStyle: {color: "#4E54C8"}, }} />
           <Stack.Screen name="TratarChamado" component={TratarChamado} options={{ headerShown: true, title: 'Detalhamento', headerTitleStyle: {color: "#4E54C8"} }} />
           <Stack.Screen name="orcamento" component={orcamento} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
+          <Stack.Screen name="osFinalizadaQuestion" component={osFinalizadaQuestion} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
+          <Stack.Screen name="osFinalizadaConfirm" component={osFinalizadaConfirm} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
+          <Stack.Screen name="adicionarFotos" component={adicionarFotos} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
