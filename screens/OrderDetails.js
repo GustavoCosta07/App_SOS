@@ -77,12 +77,44 @@ const OrderDetails = ({ route }) => {
   }
 
   const iniciarDeslocamento = () => {
-// 
+    // 
     const fetchInit = async () => {
       try {
 
         const requestBody = {
-          id_tecnico: user.user_id
+          id_tecnico: user.user_id,
+          id_chamado: orderNumber,
+          tipo: 1
+        };
+
+        const response = await fetch('https://grupofmv.app.br/api/v1/integracao/iniciar_deslocamento_os', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+        const data = await response.json();
+        if (data.status == 1) {
+          navigation.navigate('AppDrawers');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do banco de dados:', error);
+      }
+    };
+
+    fetchInit();
+  }
+
+  const encerrarDeslocamento = () => {
+    // 
+    const fetchInit = async () => {
+      try {
+
+        const requestBody = {
+          id_tecnico: user.user_id,
+          id_chamado: orderNumber,
+          tipo: 2
         };
 
         const response = await fetch('https://grupofmv.app.br/api/v1/integracao/iniciar_deslocamento_os', {
