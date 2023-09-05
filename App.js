@@ -27,7 +27,7 @@ export default function App() {
           <Stack.Screen name="orcamento" component={orcamento} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
           <Stack.Screen name="osFinalizadaQuestion" component={osFinalizadaQuestion} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
           <Stack.Screen name="osFinalizadaConfirm" component={osFinalizadaConfirm} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
-          <Stack.Screen name="adicionarFotos" component={adicionarFotos} options={{ headerShown: true, title: 'Orçamento', headerTitleStyle: {color: "#4E54C8"} }} />
+          <Stack.Screen name="adicionarFotos" component={adicionarFotos} options={{ headerShown: true, title: 'Adicionar Imagens', headerTitleStyle: {color: "#4E54C8"} }} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
