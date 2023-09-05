@@ -40,7 +40,7 @@ export default function ImagePickerExample() {
       uri: item.uri,
       description: item.description || '', // Se não houver descrição, definimos como uma string vazia
     }));
-  
+
     return dataToSend;
   };
 
@@ -87,7 +87,7 @@ export default function ImagePickerExample() {
       });
       formData.append(`description${index}`, image.description);
     });
-  
+
     // Envia as imagens e descrições para o servidor
     try {
       const response = await fetch('https://grupofmv.app.br/api/v1/integracao/enviar_imagens', {
@@ -103,8 +103,8 @@ export default function ImagePickerExample() {
       console.error(error);
     }
   };
-  
-  
+
+
 
   const sendImagesToServer = () => {
 
