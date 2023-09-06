@@ -75,20 +75,51 @@ export default function ImagePickerExample() {
     Keyboard.dismiss();
   };
 
+  // const uploadImages = async (images) => {
+  //   // Cria um objeto FormData
+  //   console.log('imagens', images)
+  //   const formData = new FormData();
+  //   images.forEach((image, index) => {
+  //     formData.append(`image${index}`, {
+  //       uri: image.uri,
+  //       name: `image${index}.jpg`,
+  //       type: 'image/jpeg',
+  //     });
+  //     formData.append(` ${index}`, image.description);
+  //   });
+
+  //   // Envia as imagens e descrições para o servidor
+  //   try {
+  //     const response = await fetch('https://grupofmv.app.br/api/v1/integracao/enviar_imagens', {
+  //       method: 'POST',
+  //       body: formData,
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const uploadImages = async (images) => {
     // Cria um objeto FormData
-    console.log('imagens', images)
+    console.log('imagens', images);
     const formData = new FormData();
+  
     images.forEach((image, index) => {
       formData.append(`image${index}`, {
         uri: image.uri,
-        name: `image${index}.jpg`,
+        name: `imageteste${index}.jpg`,
         type: 'image/jpeg',
       });
-      formData.append(`description${index}`, image.description);
+      
+      formData.append('textData', image.uri);
     });
-
-    // Envia as imagens e descrições para o servidor
+  
+  
     try {
       const response = await fetch('https://grupofmv.app.br/api/v1/integracao/enviar_imagens', {
         method: 'POST',
@@ -103,8 +134,10 @@ export default function ImagePickerExample() {
       console.error(error);
     }
   };
+  
 
-
+  
+  
 
   const sendImagesToServer = () => {
 
@@ -112,7 +145,7 @@ export default function ImagePickerExample() {
 
     uploadImages(dataToSend)
 
-    console.log('Enviando imagens para o servidor:', dataToSend);
+    // console.log('Enviando imagens para o servidor:', dataToSend);
     setImages([]);
   };
 
