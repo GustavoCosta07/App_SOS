@@ -2,12 +2,16 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useEffect } from 'react';
 import { Button, FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { MaterialIcons } from "@expo/vector-icons";
+import * as ImageManipulator from 'expo-image-manipulator';
+
 
 export default function ImagePickerExample() {
   const [images, setImages] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [convertedUris, setConvertedUris] = useState([]);
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
@@ -20,11 +24,27 @@ export default function ImagePickerExample() {
     }
   }, [selectedImageIndex, images]);
 
+  const convertImages = async (uris) => {
+    const convertedImages = await Promise.all(
+      uris.map(async (uri) => {
+        const result = await ImageManipulator.manipulateAsync(
+          uri,
+          [{ resize: { width: 1000 } }],
+          { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        return result.uri;
+      })
+    );
+  
+    setConvertedUris(convertedImages);
+  };
+  
+
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [4, 3],
-      quality: 1,
+      quality: 10,
       allowsMultipleSelection: true,
     });
   
@@ -35,6 +55,19 @@ export default function ImagePickerExample() {
         fileName: asset.uri.split('/').pop() // Extrai o nome do arquivo da URI
       }));
       setImages((prevImages) => [...prevImages, ...newImages]);
+    }
+  };
+
+  const pickImages2 = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 10,
+      allowsMultipleSelection: true,
+    });
+  
+    if (!result.canceled) {
+      setSelectedImage(result);
     }
   };
   
@@ -110,6 +143,57 @@ export default function ImagePickerExample() {
     }
   };
 
+
+  const uploadImage = async () => {
+
+    const url = 'http://192.168.100.12:3000/files/upload';
+    const url2 = 'https://grupofmv.app.br/api/v1/integracao/enviar_imagens';
+
+    if (images) {
+
+      const formData = new FormData();
+
+      let uris = images.map(image => image.uri);
+
+      await convertImages(uris)
+
+      const urisConvertidas = convertedUris
+      
+      console.log('urisTratadas', urisConvertidas)
+
+      urisConvertidas.forEach((image, index) => {
+        formData.append(`files[]`, { //quando for php precisa dos colchetes, quando for nest não precisa
+          uri: image,
+          name: `image${index}.jpg`,
+          type: 'image/jpg',
+        });
+      });
+
+      // formData.append('file', {
+      //   uri: images[0].uri,
+      //   type: 'image/jpg',
+      //   name: 'image.jpg',
+      // });
+
+
+      fetch(url2, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => response.text())
+        .then(data => {
+          console.log('Upload successful!', data);
+          setSelectedImage(null);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  };
+
   // const uploadImages = async (images) => {
   //   // Cria um objeto FormData
   //   console.log('imagens', images);
@@ -147,12 +231,12 @@ export default function ImagePickerExample() {
 
   const sendImagesToServer = () => {
 
-    const dataToSend = prepareDataForApi();
+    // const dataToSend = prepareDataForApi();
 
-    uploadImages(dataToSend)
+    // uploadImages(dataToSend)
 
-    // console.log('Enviando imagens para o servidor:', dataToSend);
-    setImages([]);
+    uploadImage()
+
   };
 
   return (
