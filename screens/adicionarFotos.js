@@ -11,7 +11,6 @@ export default function ImagePickerExample() {
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [convertedUris, setConvertedUris] = useState([]);
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
@@ -24,20 +23,22 @@ export default function ImagePickerExample() {
     }
   }, [selectedImageIndex, images]);
 
-  const convertImages = async (uris) => {
+
+  const convertImages = async (imagesFunction) => {
     const convertedImages = await Promise.all(
-      uris.map(async (uri) => {
+      images.map(async (image) => {
         const result = await ImageManipulator.manipulateAsync(
-          uri,
+          image.uri,
           [{ resize: { width: 1000 } }],
           { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
         );
-        return result.uri;
+        return { uri: result.uri, description: image.description };
       })
     );
+
+    return convertedImages
   
-    setConvertedUris(convertedImages);
-  };
+};
   
 
   const pickImages = async () => {
@@ -56,31 +57,6 @@ export default function ImagePickerExample() {
       }));
       setImages((prevImages) => [...prevImages, ...newImages]);
     }
-  };
-
-  const pickImages2 = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      aspect: [4, 3],
-      quality: 10,
-      allowsMultipleSelection: true,
-    });
-  
-    if (!result.canceled) {
-      setSelectedImage(result);
-    }
-  };
-  
-
-  const prepareDataForApi = () => {
-    // Mapeie o estado `images` para criar um array de objetos com as informações necessárias
-    const dataToSend = images.map((item) => ({
-      uri: item.uri,
-      description: item.description || '', // Se não houver descrição, definimos como uma string vazia
-      caminho: item.fileName
-    }));
-
-    return dataToSend;
   };
 
   const updateDescription = (index, text) => {
@@ -114,67 +90,23 @@ export default function ImagePickerExample() {
     Keyboard.dismiss();
   };
 
-  const uploadImages = async (images) => {
-    // Cria um objeto FormData
-    console.log('imagens', images)
-    const formData = new FormData();
-    images.forEach((image, index) => {
-      formData.append(`image${index}`, {
-        uri: image.caminho,
-        name: `image${index}.jpg`,
-        type: 'image/jpeg',
-      });
-      formData.append(` ${index}`, image.description);
-    });
+  const uploadImage = async (imagensTratadas) => {
 
-    // Envia as imagens e descrições para o servidor
-    try {
-      const response = await fetch('https://grupofmv.app.br/api/v1/integracao/enviar_imagens', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  const uploadImage = async () => {
-
-    const url = 'http://192.168.100.12:3000/files/upload';
+    // const url = 'http://192.168.100.12:3000/files/upload';
     const url2 = 'https://grupofmv.app.br/api/v1/integracao/enviar_imagens';
 
     if (images) {
 
       const formData = new FormData();
-
-      let uris = images.map(image => image.uri);
-
-      await convertImages(uris)
-
-      const urisConvertidas = convertedUris
       
-      console.log('urisTratadas', urisConvertidas)
-
-      urisConvertidas.forEach((image, index) => {
+      imagensTratadas.forEach((image, index) => {
         formData.append(`files[]`, { //quando for php precisa dos colchetes, quando for nest não precisa
-          uri: image,
+          uri: image.uri,
           name: `image${index}.jpg`,
           type: 'image/jpg',
         });
+        formData.append(`${index}`, image.description);
       });
-
-      // formData.append('file', {
-      //   uri: images[0].uri,
-      //   type: 'image/jpg',
-      //   name: 'image.jpg',
-      // });
-
 
       fetch(url2, {
         method: 'POST',
@@ -194,49 +126,13 @@ export default function ImagePickerExample() {
     }
   };
 
-  // const uploadImages = async (images) => {
-  //   // Cria um objeto FormData
-  //   console.log('imagens', images);
-  //   const formData = new FormData();
-  
-  //   images.forEach((image, index) => {
-  //     formData.append(`image${index}`, {
-  //       uri: image.uri,
-  //       name: `imageteste${index}.jpg`,
-  //       type: 'image/jpeg',
-  //     });
-      
-  //     formData.append('textData', image.uri);
-  //   });
-  
-  
-  //   try {
-  //     const response = await fetch('https://grupofmv.app.br/api/v1/integracao/enviar_imagens', {
-  //       method: 'POST',
-  //       body: formData,
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  
+  const sendImagesToServer = async () => {
 
-  
-  
+    const imagens = await convertImages(images)
+    
+    uploadImage(imagens)
 
-  const sendImagesToServer = () => {
-
-    // const dataToSend = prepareDataForApi();
-
-    // uploadImages(dataToSend)
-
-    uploadImage()
-
+    setImages([]);
   };
 
   return (
