@@ -39,6 +39,10 @@ const OrderDetails = ({ route }) => {
     if (selectedOption != 'fixa') {
       objetoDesejado = databaseItems.find(item => item.equipamento_id === selectedOption);
     }
+    if (objetoDesejado) {
+      objetoDesejado.numero_os = os_id
+      objetoDesejado.numero_chamado = orderNumber
+    }
 
     const dados = { equipamento: objetoDesejado };
     navigation.navigate('TratarChamado', { dados });

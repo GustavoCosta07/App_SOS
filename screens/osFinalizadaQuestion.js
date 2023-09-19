@@ -6,7 +6,8 @@ import CheckBox from '../components/CheckBox';
 
 
 export default function TratarChamado({ route }) {
-    //   const { dados } = route.params;
+      const { dados } = route.params;
+      console.log('dadosquestion', dados)
     const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -17,7 +18,7 @@ export default function TratarChamado({ route }) {
     const verifyOption = () => {
 
         if (selectedItems == 1) {
-            navigation.navigate('osFinalizadaConfirm')
+            navigation.navigate('osFinalizadaConfirm', {dados})
         }
         
         if (selectedItems == 2) {

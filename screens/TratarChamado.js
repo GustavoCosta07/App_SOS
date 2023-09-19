@@ -9,8 +9,10 @@ export default function TratarChamado({ route }) {
   const { dados } = route.params;
   const navigation = useNavigation();
 
+  console.log('dados7', dados)
+
   const finalizar = () => {
-    navigation.navigate('osFinalizadaQuestion')
+    navigation.navigate('osFinalizadaQuestion', {dados})
   }
 
   const orcamento = () => {

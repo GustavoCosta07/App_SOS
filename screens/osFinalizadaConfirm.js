@@ -13,14 +13,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 export default function TratarChamado({ route }) {
-    //   const { dados } = route.params;
+      const { dados } = route.params;
     const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
     const [texto, setTexto] = useState('');
-
-    const finalizar = () => {
-        alert('ola')
-    }
 
     const dismissKeyboard = () => {
         Keyboard.dismiss();
@@ -31,7 +27,7 @@ export default function TratarChamado({ route }) {
 
         if (selectedItems == 1) {
 
-            navigation.navigate('adicionarFotos')
+            navigation.navigate('adicionarFotos', {dados})
         }
     }
 

@@ -5,7 +5,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImageManipulator from 'expo-image-manipulator';
 
 
-export default function ImagePickerExample() {
+export default function ImagePickerExample({route}) {
+  const { dados } = route.params;
   const [images, setImages] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -107,6 +108,13 @@ export default function ImagePickerExample() {
         });
         formData.append(`${index}`, image.description);
       });
+      formData.append('dados', JSON.stringify({
+        numero_os: dados.equipamento.numero_os,
+        numero_chamado: dados.equipamento.numero_chamado
+      }));
+      
+      
+      console.log('form', formData)
 
       fetch(url2, {
         method: 'POST',
