@@ -236,7 +236,7 @@ const OrderDetails = ({ route }) => {
             onValueChange={(itemValue) => handleOptionChange(itemValue)}
           >
             {/* Fixed option */}
-            <Picker.Item label="Não informar modelo" value="fixa" />
+            {/* <Picker.Item label="Não informar modelo" value="fixa" /> */}
 
             {databaseItems.map((item) => (
               <Picker.Item
